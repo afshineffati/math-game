@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+        <style>
+            #app {
+                text-align: center;
+                font-family: 'Courier New', Courier, monospace;
+            }
+
+            #problem {
+                font-size: 50px;
+            }
+
+            .correct {
+                color: green;
+            }
+
+            .incorrect {
+                color: red;
+            }
+
+            #winner {
+                font-size: 50px;
+                color: green;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="app"></div>
+
+<script type="text/babel">
+            function App() {
+
+                const [state, setState] = React.useState({
+                    num1: Math.ceil(Math.random() * 10),
+                    num2: Math.ceil(Math.random() * 10),
+                    response: "",
+                    score: 0,
+                    lastAnswer: ""
+                });
+
+                function checkAnswer(event) {
+                    if (event.key === 'Enter') {
+                        const answer = parseInt(state.response)
+                        if (state.num1 + state.num2 === answer) {
+                            setState({
+                                ...state,
+                                num1: Math.ceil(Math.random() * 10),
+                                num2: Math.ceil(Math.random() * 10),
+                                score: state.score + 1,
+                                response: "",
+                                lastAnswer: "correct"
+                            })
+                        } else {
+                            setState({
+                                ...state,
+                                score: state.score - 1,
+                                response: "",
+                                lastAnswer: "incorrect"
+                            })
+                        }
+                    }
+                }
+
+                function updateResponse(event) {
+                    setState({
+                        ...state,
+                        response: event.target.value
+                    });
+                    
+                }
+                
+                if (state.score === 10) {
+                    return (
+                        <div id="winner">
+                            You Won!
+                        </div>
+                    )
+                }
+
+                return (
+                    <div>
+                        <div className={state.lastAnswer} id="problem">{state.num1} + {state.num2}</div>
+                        <input autoFocus="true" onKeyPress={checkAnswer}  onChange={updateResponse} value={state.response} />
+                        <div> Score: {state.score}</div>
+                    </div>
+                 );
+            }
+
+            ReactDOM.render(<App />, document.querySelector('#app'));
+        </script>
+    </body>
+</html>
